@@ -357,7 +357,7 @@
   <h2 class="cta-heading">Reservá tu lugar <span class="ember-dot"></span></h2>
   <p class="cta-sub">Completá el formulario · Te enviamos todos los detalles</p>
 
-  <form id="registrationForm" novalidate>
+  <form id="registrationForm" action="https://formspree.io/f/xlgwqppw" method="POST" novalidate>
     <div class="field-row">
       <div class="field">
         <label for="nombre">Nombre</label>
@@ -397,15 +397,15 @@
   const form = document.getElementById('registrationForm');
   const success = document.getElementById('successMsg');
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const nombre   = form.nombre.value.trim();
     const apellido = form.apellido.value.trim();
     const email    = form.email.value.trim();
 
+    // Validate required fields
     if (!nombre || !apellido || !email) {
-      // Shake invalid fields
       [form.nombre, form.apellido, form.email].forEach(field => {
         if (!field.value.trim()) {
           field.style.borderColor = 'rgba(196,104,58,0.9)';
@@ -422,24 +422,36 @@
       return;
     }
 
-    // Collect data
-    const data = {
-      nombre, apellido,
-      email,
-      telefono: form.telefono.value.trim(),
-      timestamp: new Date().toISOString()
-    };
+    // Submit to Formspree
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
 
-    console.log('Registro recibido:', data);
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
 
-    // Show success
-    form.style.transition = 'opacity 0.4s, transform 0.4s';
-    form.style.opacity = '0';
-    form.style.transform = 'translateY(-10px)';
-    setTimeout(() => {
-      form.style.display = 'none';
-      success.style.display = 'block';
-    }, 400);
+      if (response.ok) {
+        form.style.transition = 'opacity 0.4s, transform 0.4s';
+        form.style.opacity = '0';
+        form.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          form.style.display = 'none';
+          success.style.display = 'block';
+        }, 400);
+      } else {
+        btn.textContent = 'Reservar mi lugar';
+        btn.disabled = false;
+        alert('Hubo un error al enviar. Por favor intentá de nuevo.');
+      }
+    } catch (err) {
+      btn.textContent = 'Reservar mi lugar';
+      btn.disabled = false;
+      alert('Hubo un error de conexión. Por favor intentá de nuevo.');
+    }
   });
 </script>
 </body>
