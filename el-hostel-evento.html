@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El Hostel — Evento I</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --wine:     #6B1A2A;
+      --wine-mid: #8C2D3F;
+      --ember:    #C4683A;
+      --gold:     #D4A853;
+      --cream:    #F5EDD8;
+      --paper:    #EDE3CC;
+      --smoke:    #2A1F1A;
+      --ink:      #1A1009;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ink);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(107,26,42,0.45) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(196,104,58,0.18) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── CONTAINER ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 32px 100px;
+    }
+
+    /* ── DECORATIVE LINE ── */
+    .rule {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+      margin-bottom: 40px;
+      animation: fadeIn 1.2s ease both;
+    }
+
+    /* ── HEADER ── */
+    header {
+      margin-bottom: 64px;
+      animation: riseUp 1s ease both;
+    }
+
+    .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--paper);
+      opacity: 0.75;
+      margin-bottom: 36px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── EVENT META ── */
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: riseUp 1s 0.2s ease both;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      opacity: 0.85;
+    }
+
+    .meta-icon {
+      color: var(--ember);
+      font-size: 14px;
+      line-height: 1.6;
+      flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      margin: 56px 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      animation: fadeIn 1.2s 0.3s ease both;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--wine-mid));
+    }
+    .divider::after { background: linear-gradient(to left, transparent, var(--wine-mid)); }
+
+    .divider-gem {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      opacity: 0.7;
+    }
+
+    /* ── CTA ── */
+    .cta-heading {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 8px;
+      animation: riseUp 1s 0.35s ease both;
+    }
+
+    .cta-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      opacity: 0.65;
+      margin-bottom: 36px;
+      animation: fadeIn 1s 0.45s ease both;
+    }
+
+    /* ── FORM ── */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      animation: riseUp 1s 0.5s ease both;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+    }
+
+    input {
+      background: rgba(245,237,216,0.05);
+      border: 1px solid rgba(212,168,83,0.2);
+      border-bottom-color: rgba(212,168,83,0.5);
+      border-radius: 2px;
+      padding: 13px 16px;
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder { color: rgba(245,237,216,0.25); font-style: italic; }
+
+    input:focus {
+      border-color: rgba(212,168,83,0.7);
+      background: rgba(245,237,216,0.08);
+      box-shadow: 0 0 0 3px rgba(212,168,83,0.07);
+    }
+
+    /* ── SUBMIT ── */
+    .btn-wrap {
+      margin-top: 10px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--wine);
+      border: 1px solid var(--wine-mid);
+      border-radius: 2px;
+      color: var(--cream);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s, transform 0.15s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button[type="submit"]::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(196,104,58,0.0) 0%, rgba(196,104,58,0.15) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background: var(--wine-mid);
+      border-color: var(--ember);
+      box-shadow: 0 4px 24px rgba(107,26,42,0.5);
+      transform: translateY(-1px);
+    }
+    button[type="submit"]:hover::after { opacity: 1; }
+    button[type="submit"]:active { transform: translateY(0); }
+
+    /* ── SUCCESS STATE ── */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      animation: riseUp 0.7s ease both;
+    }
+
+    .success-msg .check {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+
+    .success-msg h3 {
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .success-msg p {
+      font-size: 1rem;
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 80px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--cream);
+      opacity: 0.2;
+      animation: fadeIn 2s 1s ease both;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── FIRE PARTICLE ── */
+    .ember-dot {
+      display: inline-block;
+      width: 4px; height: 4px;
+      background: var(--ember);
+      border-radius: 50%;
+      animation: flicker 2.5s ease-in-out infinite alternate;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    @keyframes flicker {
+      0%   { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1;   transform: scale(1.3); }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="rule"></div>
+
+  <header>
+    <p class="label">El Hostel &nbsp;·&nbsp; Evento I</p>
+    <h1>El <em>Hostel</em></h1>
+    <p class="subtitle">Asado, vino y música</p>
+
+    <div class="meta">
+      <div class="meta-item">
+        <span class="meta-icon">◈</span>
+        <span>Sábado 7 de Marzo &nbsp;—&nbsp; 20:00 hs</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-icon">◈</span>
+        <span>Villa Adelina, Buenos Aires</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="divider"><div class="divider-gem"></div></div>
+
+  <h2 class="cta-heading">Reservá tu lugar <span class="ember-dot"></span></h2>
+  <p class="cta-sub">Completá el formulario · Te enviamos todos los detalles</p>
+
+  <form id="registrationForm" novalidate>
+    <div class="field-row">
+      <div class="field">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+      </div>
+      <div class="field">
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" name="apellido" placeholder="Tu apellido" required />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" placeholder="tu@mail.com" required />
+    </div>
+
+    <div class="field">
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" placeholder="+54 9 11 ···· ····" />
+    </div>
+
+    <div class="btn-wrap">
+      <button type="submit">Reservar mi lugar</button>
+    </div>
+  </form>
+
+  <div class="success-msg" id="successMsg">
+    <div class="check">🔥</div>
+    <h3>¡Reserva recibida!</h3>
+    <p>Te enviamos un mail con todos los detalles.<br/>Nos vemos el sábado 7.</p>
+  </div>
+
+  <footer>© El Hostel &nbsp;·&nbsp; 2025</footer>
+</div>
+
+<script>
+  const form = document.getElementById('registrationForm');
+  const success = document.getElementById('successMsg');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const nombre   = form.nombre.value.trim();
+    const apellido = form.apellido.value.trim();
+    const email    = form.email.value.trim();
+
+    if (!nombre || !apellido || !email) {
+      // Shake invalid fields
+      [form.nombre, form.apellido, form.email].forEach(field => {
+        if (!field.value.trim()) {
+          field.style.borderColor = 'rgba(196,104,58,0.9)';
+          field.animate([
+            { transform: 'translateX(-4px)' },
+            { transform: 'translateX(4px)' },
+            { transform: 'translateX(-3px)' },
+            { transform: 'translateX(3px)' },
+            { transform: 'translateX(0)' }
+          ], { duration: 320, easing: 'ease-out' });
+          setTimeout(() => field.style.borderColor = '', 1200);
+        }
+      });
+      return;
+    }
+
+    // Collect data
+    const data = {
+      nombre, apellido,
+      email,
+      telefono: form.telefono.value.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('Registro recibido:', data);
+
+    // Show success
+    form.style.transition = 'opacity 0.4s, transform 0.4s';
+    form.style.opacity = '0';
+    form.style.transform = 'translateY(-10px)';
+    setTimeout(() => {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }, 400);
+  });
+</script>
+</body>
+</html>
